@@ -53,7 +53,7 @@ class mainClass
     }
     bool isInput(string[] statement)
     {
-        if (statement.Length == 2)
+        if (statement.Length == 3)
         {
             if (statement[0] == "input" && statement[1] == "->")
             {

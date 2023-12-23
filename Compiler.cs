@@ -140,12 +140,12 @@ namespace zentronC
             else if (mode == "<")
             {
                
-                File.AppendAllText(tmp, $"if(atoi(pull(\"{v1}\")) < atoi(pull(\"{v2}\")))");
+                File.AppendAllText(tmp, $"if(atoi({v1}) < atoi({v2}))");
             
             }
             else if (mode == ">")
             {
-                File.AppendAllText(tmp, $"if(atoi(pull(\"{v1}\")) > atoi(pull(\"{v2}\")))");
+                File.AppendAllText(tmp, $"if(atoi({v1}) > atoi({v2}))");
      
             }
             File.AppendAllText(tmp, "{\n");
@@ -203,11 +203,11 @@ namespace zentronC
         public void writeIn(string[] statement)
         {
             string[] args = statement[1..^0];
-            string varname = args[0];
+            string varname = args[1];
             string tmp = "tmp.c";
             if(isAutoDeclare)
             {
-                File.AppendAllText(tmp, $"push({varname},\"\");\n");
+                File.AppendAllText(tmp, $"push(\"{varname}\",\"\");\n");
             }
             File.AppendAllText(tmp, $"stack.values[getIndex(\"{varname}\")] = (char *)malloc(1000);\r\n");
             File.AppendAllText(tmp, $"fgets(stack.values[getIndex(\"{varname}\")], 1000, stdin);\n");
