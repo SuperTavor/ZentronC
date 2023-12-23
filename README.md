@@ -21,7 +21,7 @@ loop
     end
 
     break
-end
+end loop
 
 say nnl "Your name is "
 say nnl &name
