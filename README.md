@@ -7,6 +7,25 @@ ZentronC is a compiled scripting language that's faster than both Lua and Python
 ## How it works
 ZentronC scripts are compiled before runtime. First, they are translated into C code and then into machine code with GCC. This compiler is dependent on GCC.
 
+## Sample script
+This script asks for the user's name and repeats until the user enters a valid name.
+```
+#rule auto-declare
+say n "What is your name"
+loop 
+    input -> name
+    if &name = ""
+        say n "Please enter a name"
+        continue
+    end
+
+    break
+end
+
+say nnl "Your name is "
+say nnl &name
+```
+
 ## Available commands and syntax
 ### Printing to the screen
 To print things to the console, you can use the following syntax:
