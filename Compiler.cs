@@ -164,7 +164,7 @@ namespace zentronC
             {
                 writeEndif();
             }
-            else if (statement[1].ToLower() == "until" || statement[1].ToLower() == "loop")
+            else if (statement[1].ToLower() == "loop")
             {
                 File.AppendAllText("tmp.c", $"goto UntilStart{UntilEndCurrent.Substring(8)};\n");
                 File.AppendAllText("tmp.c", (UntilEndCurrent + ":\n"));
