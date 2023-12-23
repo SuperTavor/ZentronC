@@ -74,7 +74,7 @@ class mainClass
         {
             compiler.writePrint(parsedLn);
         }
-        if(cmnd.ToLower() == "#rule")
+        else if(cmnd.ToLower() == "#rule")
         {
             compiler.writeRule(parsedLn);
         }
