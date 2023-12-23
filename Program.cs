@@ -76,7 +76,7 @@ class mainClass
         }
         if(cmnd.ToLower() == "#rule")
         {
-
+            compiler.writeRule(parsedLn);
         }
         else if (cmnd.ToLower() == "until")
         {
