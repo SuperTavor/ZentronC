@@ -81,7 +81,7 @@ namespace zentronC
             }
             else if (parsed[2] == "!=")
             {
-                File.AppendAllText("tmp.c", $"while (strcmp({v1},{v2}) == 1)\n");
+                File.AppendAllText("tmp.c", $"while (strcmp({v1},{v2}) != 0)\n");
                 File.AppendAllText("tmp.c", "{\n");
             }
         }
@@ -191,7 +191,7 @@ namespace zentronC
             }
             else if (mode == "isnt")
             {
-                File.AppendAllText(tmp, $"if(strcmp({v1},{v2}) == 1)\n");
+                File.AppendAllText(tmp, $"if(strcmp({v1},{v2}) != 0)\n");
             }
             else if (mode == "<")
             {
