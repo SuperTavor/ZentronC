@@ -1,5 +1,6 @@
 # ZentronC 🚀
 *Documentation last updated December 24th*
+
 **NOTE: ZentronC is a project I am doing for fun. It is very buggy at its current state and is updated almost daily**
 
 ZentronC is a compiled scripting language that's faster than both Lua and Python. It is relatively lightweight and is written in C#.
