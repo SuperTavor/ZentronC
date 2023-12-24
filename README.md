@@ -1,4 +1,5 @@
 # ZentronC 🚀
+*Documentation last updated December 24th*
 **NOTE: ZentronC is a project I am doing for fun. It is very buggy at its current state and is updated almost daily**
 
 ZentronC is a compiled scripting language that's faster than both Lua and Python. It is relatively lightweight and is written in C#.
@@ -12,17 +13,18 @@ ZentronC scripts are compiled before runtime. First, they are translated into C 
 ## Sample script
 This script asks for the user's name and repeats until the user enters a valid name.
 ```
-#rule auto-declare
+name;
 say n "What is your name"
 loop 
     input -> name
-    if &name = ""
+    if &name is ""
         say n "Please enter a name"
         continue
     end
-
-    break
-end loop
+    else
+        break
+    end
+end
 
 say nnl "Your name is "
 say nnl &name
@@ -42,7 +44,7 @@ say n "Hello, world!"
 
 If we were to put "Hello, world" in a variable, this is how it would look:
 ```
-x = "Hello, world"
+x is "Hello, world"
 say n &x
 ```
 To print a newline, you would use this syntax:
@@ -53,7 +55,7 @@ sayemptyline
 ### Declaring variables
 To declare a variable, you can follow this syntax:
 
-`[Variable_name] = [Value]`
+`[Variable_name] is [Value]`
 
 To create an empty variable, you can specify a variable name and end it with a semicolon.
 
@@ -99,7 +101,8 @@ You can use `//` for single-line comments.
 Available operators for checks:
 ```
 // more will be added in the near future
-=
+is
+isnt
 <
 >
 ```
@@ -133,14 +136,14 @@ For infinite loops, you can use the following syntax:
 ```
 loop
   // do something
-end loop
+end
 ```
 For until loops, you can use the following syntax:
 
 ```
 until [value_1] [operator] [value_2]
   // do something
-end loop
+end
 ```
 **Remember: variable names need to be prefixed with an ampersand!**
 
