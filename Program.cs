@@ -5,7 +5,7 @@ class mainClass
     public static string output = "";
     public static List<string[]> parsedLines = new List<string[]>();
     Compiler compiler = new Compiler();
-    public static Dictionary<string,object> stack = new Dictionary<string,object>();
+    public static List<string> createdVars = new List<string>();
     static void Main(string[] args)
     {
         if (args.Length < 2)
@@ -44,7 +44,7 @@ class mainClass
         }
         else if (statement.Length > 2)
         {
-            if (statement[1] == "=")
+            if (statement[1] == "is")
             {
                 return true;
             }
@@ -116,7 +116,7 @@ class mainClass
         }
         else if (cmnd.ToLower() == "loop")
         {
-            compiler.writeUntilBegin(new string[] {"until","1","=","2"});
+            compiler.writeLoop();
         }
         else if (cmnd.ToLower() == "exit")
         {

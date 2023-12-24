@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics;
+using System.Text;
 
 namespace zentronC
 {
     public class Compiler
     {
-        private string UntilEndCurrent = "";
         bool isAutoDeclare = false;
         public void Compile(string output)
         {
@@ -29,18 +29,14 @@ namespace zentronC
             File.AppendAllText(tmp, "#include <string.h>\n");
             File.AppendAllText(tmp, "#include <unistd.h>\n");
             File.AppendAllText(tmp, "#include <stdlib.h>\n");
-            File.AppendAllText(tmp, "struct emustack\r\n{\r\n    char *varnames[1000];\r\n    char *values[1000];\r\n    int top;\r\n};\r\nstruct emustack stack;\r\nvoid push(const char *varname, const char *value)\r\n{\r\n    if (!isItemPresent(stack.varnames, varname))\r\n    {\r\n        stack.varnames[stack.top] = strdup(varname);\r\n        stack.values[stack.top] = strdup(value);\r\n        stack.top++;\r\n    }\r\n    else\r\n    {\r\n        stack.values[getIndex(varname)] = strdup(value);\r\n    }\r\n}\r\nchar *pull(char *varname)\r\n{\r\n    int index = 0;\r\n    for (int i = 0; i < 1000; i++)\r\n    {\r\n        if (strcmp(stack.varnames[i], varname) == 0)\r\n        {\r\n            index = i;\r\n            break;\r\n        }\r\n    }\r\n    return stack.values[index];\r\n}\r\nint isItemPresent(char *arr[], char *item)\r\n{\r\n    int n = 0;\r\n    while (arr[n] != NULL)\r\n    {\r\n        n++;\r\n    }\r\n\r\n    for (int i = 0; i < n; i++)\r\n    {\r\n        if (strcmp(arr[i], item) == 0)\r\n        {\r\n            return 1;\r\n        }\r\n    }\r\n\r\n    return 0;\r\n}\r\n\r\nint getIndex(char *varname)\r\n{\r\n    int index = 0;\r\n    for (int i = 0; i < 1000; i++)\r\n    {\r\n        if (strcmp(stack.varnames[i], varname) == 0)\r\n        {\r\n            index = i;\r\n            break;\r\n        }\r\n    }\r\n    return index;\r\n}\r\nvoid set(char *varname, char *content)\r\n{\r\n    int index = getIndex(varname);\r\n    strcpy(stack.values[index], content);\r\n}");
             File.AppendAllText(tmp, "\nint tmp = 0;\n");
             File.AppendAllText(tmp, "\nchar conversionBuff[10000];\n");
-            File.AppendAllText(tmp, "//Program Logic\n");
             File.AppendAllText(tmp, "int main()\n");
             File.AppendAllText(tmp, "{\n");
 
         }
         public void closeCompiler()
         {
-
-            File.AppendAllText("tmp.c", "\n//Free memory from emulated stack\n\nfor (int i = 0; i < stack.top; i++)\n    {\n        free(stack.varnames[i]);\n        free(stack.values[i]);\n    }");
             File.AppendAllText("tmp.c", "\n}");
         }
         public void writeSleep(string[] statement)
@@ -49,28 +45,84 @@ namespace zentronC
         }
         public void writeUntilBegin(string[] statement)
         {
-            Random rnd = new Random();
-            int UntilID = rnd.Next(1000000);
-            string StartLabel = "UntilStart" + UntilID.ToString();
-            File.AppendAllText("tmp.c", $"{StartLabel}:\n");
-            UntilEndCurrent = "UntilEnd" + UntilID;
-            string[] forif = {"If", statement[1], statement[2], statement[3],UntilEndCurrent};
-            writeIf(forif);
-            writeGo(new string[] { "jumptomark", UntilEndCurrent });
-            writeEndif();
+            var parsed = ParseUntil(statement);
+            var v1 = parsed[1];
+            var v2 = parsed[3];
+            if(v1.StartsWith("&"))
+            {
+                v1 = v1.Substring(1); 
+            }
+            else
+            {
+                v1 = $"\"{v1}\"";
+            }
+            if (v2.StartsWith("&"))
+            {
+                v2 = v2.Substring(1);
+            }
+            else
+            {
+                v2 = $"\"{v2}\"";
+            }
+            if (parsed[2] == ">")
+            {
+                File.AppendAllText("tmp.c", $"while (atoi({v1}) > atoi({v2}))\n");
+                File.AppendAllText("tmp.c", "{\n");
+            }
+            else if (parsed[2] == "<")
+            {
+                File.AppendAllText("tmp.c", $"while (atoi({v1}) < atoi({v2}))\n");
+                File.AppendAllText("tmp.c", "{\n");
+            }
+            else if (parsed[2] == "==")
+            {
+                File.AppendAllText("tmp.c", $"while (strcmp({v1},{v2}) == 0)\n");
+                File.AppendAllText("tmp.c", "{\n");
+            }
+            else if (parsed[2] == "!=")
+            {
+                File.AppendAllText("tmp.c", $"while (strcmp({v1},{v2}) == 1)\n");
+                File.AppendAllText("tmp.c", "{\n");
+            }
         }
-        public void writeUntilEnd()
+        public void writeLoop()
         {
-            File.AppendAllText("tmp.c", $"goto UntilStart{UntilEndCurrent.Substring(8)};\n");
-            File.AppendAllText("tmp.c",(UntilEndCurrent + ":\n"));
+            File.AppendAllText("tmp.c", "while(1)\n{\n");
+        }
+        private string[] ParseUntil(string[] statement)
+        {
+            var op = statement[2];
+           
+            if(op == "<")
+            {
+                op = ">";
+            }
+            else if (op == ">")
+            {
+                op = "<";
+            }
+            else if (op == "is")
+            {
+                op = "!=";
+            }
+            else if (op == "isnt")
+            {
+                op = "==";
+            }
+            else
+            {
+                throw new Exception("Invalid operator, cannot parse token");
+            }
+            statement[2] = op;
+            return statement;
         }
         public void writeContinue()
         {
-            File.AppendAllText("tmp.c", $"goto UntilStart{UntilEndCurrent.Substring(8)};\n");
+            File.AppendAllText("tmp.c", $"continue;\n");
         }
         public void writeBreak()
         {
-            File.AppendAllText("tmp.c", $"goto {UntilEndCurrent};\n");
+            File.AppendAllText("tmp.c", $"break;\n");
         }
         public void writePrint(string[] statement)
         {
@@ -86,7 +138,7 @@ namespace zentronC
             if (args[1].StartsWith("&"))
             {
                 literalIndicator = "";
-                valueToPrint = $"pull(\"{args[1].Substring(1)}\")";
+                valueToPrint = args[1].Substring(1);
             }
             else
             {
@@ -119,7 +171,7 @@ namespace zentronC
             string v2 = args[2];
             if(v1.StartsWith("&"))
             {
-                v1 = $"pull(\"{v1.Substring(1)}\")";
+                v1 = v1.Substring(1);
             }
             else
             {
@@ -127,15 +179,19 @@ namespace zentronC
             }
             if (v2.StartsWith("&"))
             {
-                v2 = $"pull(\"{v2.Substring(1)}\")";
+                v2 = v2.Substring(1);
             }
             else
             {
                 v2 = $"\"{v2}\"";
             }
-            if (mode == "=")
+            if (mode == "is")
             {
                 File.AppendAllText(tmp, $"if(strcmp({v1},{v2}) == 0)\n");
+            }
+            else if (mode == "isnt")
+            {
+                File.AppendAllText(tmp, $"if(strcmp({v1},{v2}) == 1)\n");
             }
             else if (mode == "<")
             {
@@ -147,6 +203,10 @@ namespace zentronC
             {
                 File.AppendAllText(tmp, $"if(atoi({v1}) > atoi({v2}))");
      
+            }
+            else
+            {
+                throw new Exception("Invalid operator!!");
             }
             File.AppendAllText(tmp, "{\n");
         }
@@ -164,10 +224,9 @@ namespace zentronC
             {
                 writeEndif();
             }
-            else if (statement[1].ToLower() == "loop")
+            else
             {
-                File.AppendAllText("tmp.c", $"goto UntilStart{UntilEndCurrent.Substring(8)};\n");
-                File.AppendAllText("tmp.c", (UntilEndCurrent + ":\n"));
+                throw new Exception("End recieves zero arguments!");
             }
         }
         public void writeEndif()
@@ -176,25 +235,44 @@ namespace zentronC
         }
         public void writeDef(string[] statement)
         {
-            if (statement[0].EndsWith(";"))
+            string varname = statement[0];
+            if (varname.EndsWith(";") && statement.Length == 1)
             {
-                File.AppendAllText("tmp.c", $"push(\"{statement[0].Substring(0, statement[0].Length-1)}\", \"\");\n");
+                File.AppendAllText("tmp.c", $"char *{statement[0].Substring(0, statement[0].Length - 1)} = NULL;\n");
                 return;
             }
-            string varname = statement[0];
             string initialValue = statement[2];
-            File.AppendAllText("tmp.c", $"\n");
+            //File.AppendAllText("tmp.c", "//" + Unsplit(statement,' ') + "\n");
             if (initialValue.StartsWith("&"))
             {
-                File.AppendAllText("tmp.c", $"push(\"{varname}\", pull(\"{initialValue.Substring(1)}\"));\n");
-                
+                initialValue = initialValue.Substring(1); 
             }
             else
             {
-                File.AppendAllText("tmp.c", $"push(\"{varname}\", \"{initialValue}\");\n");
+                initialValue = $"\"{initialValue}\"";
             }
-            File.AppendAllText("tmp.c", $"stack.values[getIndex(\"{varname}\")][strcspn(stack.values[getIndex(\"{varname}\")], \"\\n\")] = '\\0';\r\n");
+            if(mainClass.createdVars.Contains(varname))
+            {
+                File.AppendAllText("tmp.c", $"{varname} = {initialValue};\n");
+            }
+            else
+            {
+                File.AppendAllText("tmp.c", $"char *{varname} = {initialValue};\n");
+                mainClass.createdVars.Add(statement[0]);
+            }
         }
+        public string Unsplit(string[] arr,char delimiter)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var item in arr)
+            {
+                sb.Append(item).Append(delimiter); 
+            }
+
+            return sb.ToString().TrimEnd(); 
+        }
+
         public void writeSayEmptyLine()
         {
             var tmp = "tmp.c";
@@ -207,11 +285,14 @@ namespace zentronC
             string tmp = "tmp.c";
             if(isAutoDeclare)
             {
-                File.AppendAllText(tmp, $"push(\"{varname}\",\"\");\n");
+                if(!mainClass.createdVars.Contains(varname))
+                {
+                    File.AppendAllText(tmp, $"char *{varname} = (char *)malloc(1000);\n");
+                }
             }
-            File.AppendAllText(tmp, $"stack.values[getIndex(\"{varname}\")] = (char *)malloc(1000);\r\n");
-            File.AppendAllText(tmp, $"fgets(stack.values[getIndex(\"{varname}\")], 1000, stdin);\n");
-            File.AppendAllText(tmp, $"stack.values[getIndex(\"{varname}\")][strcspn(stack.values[getIndex(\"{varname}\")], \"\\n\")] = '\\0';\n");
+            File.AppendAllText(tmp, $"{varname} = (char *)malloc(1000);\r\n");
+            File.AppendAllText(tmp, $"fgets({varname}, 1000, stdin);\n");
+            File.AppendAllText(tmp, $"{varname}[strcspn({varname}, \"\\n\")] = '\\0';\n");
         }
         public void writeIncrementNum(string[] statement)
         {
@@ -219,11 +300,11 @@ namespace zentronC
             string varname = args[0];
             string operationNum = args[2];
             File.AppendAllText("tmp.c", $"tmp = 0;\n");
-            File.AppendAllText("tmp.c", $"tmp = atoi(pull(\"{varname}\"));\n");
+            File.AppendAllText("tmp.c", $"tmp = atoi({varname});\n");
             File.AppendAllText("tmp.c", $"tmp += {operationNum};\n");
             File.AppendAllText("tmp.c", "memset(conversionBuff, 0, sizeof(conversionBuff));\r\n");
             File.AppendAllText("tmp.c", $"sprintf(conversionBuff,\"%d\",tmp);\n");
-            File.AppendAllText("tmp.c", $"set(\"{varname}\",conversionBuff);\n");
+            File.AppendAllText("tmp.c", $"{varname} = conversionBuff;\n");
         }
         public void writeDecrementNum(string[] statement)
         {
@@ -231,17 +312,21 @@ namespace zentronC
             string varname = args[0];
             string operationNum = args[2];
             File.AppendAllText("tmp.c", $"tmp = 0;\n");
-            File.AppendAllText("tmp.c", $"tmp = atoi(pull(\"{varname}\"));\n");
+            File.AppendAllText("tmp.c", $"tmp = atoi({varname});\n");
             File.AppendAllText("tmp.c", $"tmp -= {operationNum};\n");
             File.AppendAllText("tmp.c", "memset(conversionBuff, 0, sizeof(conversionBuff));\r\n");
             File.AppendAllText("tmp.c", $"sprintf(conversionBuff,\"%d\",tmp);\n");
-            File.AppendAllText("tmp.c", $"set(\"{varname}\",conversionBuff);\n");
+            File.AppendAllText("tmp.c", $"{varname} = conversionBuff;\n");
         }
         public void writeRule(string[] statement)
         {
             if (statement[1].ToLower() == "auto-declare")
             {
                 isAutoDeclare = true;
+            }
+            else
+            {
+                throw new Exception("Invalid rule.");
             }
         }
     }
