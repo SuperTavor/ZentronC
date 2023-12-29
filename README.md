@@ -30,30 +30,27 @@ say_fmt "Your name is " &name
 
 ## Available commands and syntax
 ### Printing to the screen
-To print things to the console, you can use the following syntax:
-```zentronC
-say ['n' to print a newline afterwards and 'nnl' to not] [the content, wrapped in " if it's a literal, and prefixed by & if it's a variable]
-```
 
-So here is what a hello world with the `say` command might look like:
+here is what a hello world with the `say` command might look like:
 ```zentronC
-say n "Hello, world!"
+say "Hello, world!"
 ```
 to print variables, you need to write `&` and then the variable name. Example:
 ```zentronC
 x = "Hello"
-say n &x
+say &x
 ```
-for string formatting, you can print with the `say_fmt` command. Example:
+you can also concatenate strings you want to print like this:
 ```zentronC
 name = "John"
 age = "10"
-say_fmt "a kid named " &name " is " &age " years old."
+say "a kid named " &name " is " &age " years old."
 ```
-Keep in mind that unlike `say`, `say_fmt` doesn't print a newline, you have to do it manually:
+
+Keep in mind that `say` doesn't automatically print a newline, you have to do it manually like this:
 ```zentronC
-say_fmt "hello, world\n"
-```
+say "Hello, newline!\n"
+
 To print a newline without anything else, you would use this syntax:
 ```zentronC
 sayemptyline
