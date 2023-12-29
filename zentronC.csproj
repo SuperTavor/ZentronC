@@ -10,8 +10,4 @@
     <PublishAot>true</PublishAot>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="examples\" />
-  </ItemGroup>
-
 </Project>

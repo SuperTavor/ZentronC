@@ -23,28 +23,10 @@ class mainClass
 
     public void run(string[] lines)
     {
-        bool iscpp = false;
         compiler.initCompiler();
         foreach(var line in lines)
         {
-            if(line.Trim().ToLower() == "cpp")
-            {
-                iscpp = true;
-                continue;
-            }
-            else if(line.Trim().ToLower() == "cppend")
-            {
-                iscpp = false;
-                continue;
-            }
-            if(iscpp)
-            {
-                File.AppendAllText("tmp.cpp",line+"\n");
-            }
-            else
-            {
-                mainClass.parsedLines.Add(ParseLine(line));
-            }
+            mainClass.parsedLines.Add(ParseLine(line));
         }
         foreach(var line in parsedLines)
         {
@@ -201,6 +183,10 @@ class mainClass
         else if (isArithemic(parsedLn, "divide"))
         {
             compiler.writeArithemic(parsedLn, "/");
+        }
+        else if(cmnd.ToLower() == "cpp")
+        {
+
         }
         else if (cmnd.StartsWith("//"))
         {

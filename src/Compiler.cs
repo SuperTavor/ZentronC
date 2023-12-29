@@ -373,6 +373,10 @@ namespace zentronC.src
             }
             File.AppendAllText(tmpFile, $"{resVar} = std::to_string(std::stoi({n1}) {type} std::stoi({n2}));\n");
         }
+        public void writeCpp(string[] statement)
+        {
+            File.AppendAllText(tmpFile, statement[1] + "\n");
+        }
     }
 }
 
