@@ -123,33 +123,6 @@ namespace zentronC.src
         {
             File.AppendAllText(tmpFile, $"break;\n");
         }
-        public void writePrint(string[] statement)
-        {
-            string[] args = statement[1..^0];
-            string valueToPrint = "";
-            string literalIndicator = "";
-            bool isNl = false;
-            if (args[0] == "n")
-            {
-                isNl = true;
-            }
-            if (args[1].StartsWith("&"))
-            {
-                literalIndicator = "";
-                valueToPrint = args[1].Substring(1);
-            }
-            else
-            {
-                valueToPrint = args[1];
-                literalIndicator = "\"";
-            }
-            File.AppendAllText(tmpFile, $"std::cout << {literalIndicator}{valueToPrint}{literalIndicator};\n");
-            if (isNl)
-            {
-                writeSayEmptyLine();
-            }
-
-        }
         public void writePoint(string[] statement)
         {
             string[] args = statement[1..^0];
@@ -223,12 +196,20 @@ namespace zentronC.src
             }
             else if (mode == "<")
             {
-                File.AppendAllText(tmpFile, $"{keyword}(std::stoi({v1}) < std::stoi({v2}))");
+                File.AppendAllText(tmpFile, $"{keyword}(std::stoi({v1}) {mode} std::stoi({v2}))");
             }
             else if (mode == ">")
             {
-                File.AppendAllText(tmpFile, $"{keyword}(std::stoi({v1}) > std::stoi({v2}))");
+                File.AppendAllText(tmpFile, $"{keyword}(std::stoi({v1}) {mode} std::stoi({v2}))");
+            }
+            else if (mode == ">=")
+            {
+                File.AppendAllText(tmpFile, $"{keyword}(std::stoi({v1}) {mode} std::stoi({v2}))");
 
+            }
+            else if (mode == "<=")
+            {
+                File.AppendAllText(tmpFile, $"{keyword}(std::stoi({v1}) {mode} std::stoi({v2}))");
             }
             else
             {

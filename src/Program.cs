@@ -89,7 +89,7 @@ class mainClass
         string[] args = parsedLn[1..^0];
         if (cmnd.ToLower() == "say")
         {
-            compiler.writePrint(parsedLn);
+            compiler.writeFmt(parsedLn);
         }
         else if(cmnd.ToLower() == "say_fmt")
         {
