@@ -66,6 +66,22 @@ class mainClass
         }
         else { return false; }
     }
+
+    bool isArithemic(string[] statement,string type)
+    {
+        if (statement.Length == 5)
+        {
+            if (statement[0] == type && statement[3] == "->")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else { return false; }
+    }
     public void doLine(string[] parsedLn)
     {
         string cmnd = parsedLn[0];
@@ -136,11 +152,19 @@ class mainClass
         }
         else if (cmnd.ToLower() == "increment")
         {
-            compiler.writeIncrementNum(parsedLn);
+            compiler.writeIncDecNum(parsedLn, true);
         }
         else if (cmnd.ToLower() == "decrement")
         {
-            compiler.writeDecrementNum(parsedLn);
+            compiler.writeIncDecNum(parsedLn,false);
+        }
+        else if (isArithemic(parsedLn,"add"))
+        {
+            compiler.writeAdd(parsedLn);
+        }
+        else if (isArithemic(parsedLn, "subtract"))
+        {
+            compiler.writeSubtract(parsedLn);
         }
         else if (cmnd.StartsWith("//"))
         {
