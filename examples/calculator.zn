@@ -4,7 +4,7 @@ num1;
 num2;
 opStr;
 isNumDigit;
-say n "Enter the operation you wanna do (either +,-,* or /)"
+say "Enter the operation you wanna do (either +,-,* or /)\n"
 loop
     input -> op
     if &op is +
@@ -19,7 +19,7 @@ loop
     elif &op is /
         break
     end
-    say n "Please enter either +,-,* or /"
+    say "Please enter either +,-,* or /\n"
     continue
 end
 if &op is +

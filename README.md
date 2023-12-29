@@ -16,16 +16,16 @@ This script asks for the user's name and repeats until the user enters a valid n
 ```zentronC
 name;
 i is 0
-say n "What is your name"
+say "What is your name\n"
 until &name isnt ""
     if &i > 0
-        say n "Name must be not empty"
+        say "Name must be not empty\n"
     end
     input -> name
     increment i by 1
 end
 
-say_fmt "Your name is " &name
+say "Your name is " &name
 ```
 
 ## Available commands and syntax
@@ -67,7 +67,6 @@ To create an empty variable, you can specify a variable name and end it with a s
 If we were to put "Hello, world" in a variable, this is how it would look:
 ```zentronC
 x is "Hello, world"
-say n &x
 ```
 
 ### Getting input
