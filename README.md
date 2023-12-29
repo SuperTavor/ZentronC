@@ -15,20 +15,17 @@ ZentronC scripts are compiled before runtime. First, they are translated into C+
 This script asks for the user's name and repeats until the user enters a valid name.
 ```zentronC
 name;
+i is 0
 say n "What is your name"
-loop 
+until &name isnt ""
+    if &i > 0
+        say n "Name must be not empty"
+    end
     input -> name
-    if &name is ""
-        say n "Please enter a name"
-        continue
-    end
-    else
-        break
-    end
+    increment i by 1
 end
 
-say nnl "Your name is "
-say nnl &name
+say_fmt "Your name is " &name
 ```
 
 ## Available commands and syntax
