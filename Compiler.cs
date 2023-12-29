@@ -233,7 +233,7 @@ namespace zentronC
             string varname = statement[0];
             if (varname.EndsWith(";") && statement.Length == 1)
             {
-                File.AppendAllText(tmpFile, $"std::string {statement[0].Substring(0, statement[0].Length - 1)} = NULL;\n");
+                File.AppendAllText(tmpFile, $"std::string {statement[0].Substring(0, statement[0].Length - 1)} = \"\";\n");
                 return;
             }
             string initialValue = statement[2];
