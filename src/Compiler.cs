@@ -1,12 +1,13 @@
 ﻿using System.Diagnostics;
 using System.Text;
 
-namespace zentronC
+namespace zentronC.src
 {
     public class Compiler
     {
         bool isAutoDeclare = false;
-        private string tmpFile = "tmp.cpp";
+        public string tmpFile = "tmp.cpp";
+        public bool isCppMode = false;
         public void Compile(string output)
         {
             string strCmdText = $"/C g++ -Os -s -o {output} {tmpFile}";
@@ -29,7 +30,6 @@ namespace zentronC
             File.AppendAllText(tmpFile, "#include <string>\n");
             File.AppendAllText(tmpFile, "#include <unistd.h>\n");
             File.AppendAllText(tmpFile, "#include <stdlib.h>\n");
-            File.AppendAllText(tmpFile, "#include <limits>\r\n");
             File.AppendAllText(tmpFile, "int main()\n");
             File.AppendAllText(tmpFile, "{\n");
 
@@ -160,8 +160,39 @@ namespace zentronC
             string[] args = statement[1..^0];
             File.AppendAllText(tmpFile, $"goto {args[0]};\n");
         }
-        public void writeIf(string[] statement)
+        public void writeFmt(string[] statement)
         {
+            string[] content = statement.Skip(1).ToArray();
+            File.AppendAllText(tmpFile, "std::cout<<");
+            foreach(string s in content)
+            {
+                string tmpString = s;
+                if(s.StartsWith("&"))
+                {
+                    tmpString = tmpString.Substring(1);
+                }
+                else
+                {
+                    tmpString = $"\"{tmpString}\"";
+                }
+                if (Array.IndexOf(content,s) == 0)
+                {
+                    File.AppendAllText(tmpFile, $"{tmpString}");
+                }
+                else
+                {
+                    File.AppendAllText(tmpFile, $"<<{tmpString}");
+                }
+            }
+            File.AppendAllText(tmpFile, ";\n");
+        }
+        public void writeIf(string[] statement,bool isElif)
+        {
+            string keyword = "if";
+            if(isElif)
+            {
+                keyword = "else if";
+            }
             string[] args = statement[1..^0];
             string mode = args[1];
             string v1 = args[0];
@@ -184,19 +215,19 @@ namespace zentronC
             }
             if (mode == "is")
             {
-                File.AppendAllText(tmpFile, $"if({v1} == {v2})\n");
+                File.AppendAllText(tmpFile, $"{keyword}({v1} == {v2})\n");
             }
             else if (mode == "isnt")
             {
-                File.AppendAllText(tmpFile, $"if({v1} != {v2})\n");
+                File.AppendAllText(tmpFile, $"{keyword}({v1} != {v2})\n");
             }
             else if (mode == "<")
             {
-                File.AppendAllText(tmpFile, $"if(std::stoi({v1}) < std::stoi({v2}))");
+                File.AppendAllText(tmpFile, $"{keyword}(std::stoi({v1}) < std::stoi({v2}))");
             }
             else if (mode == ">")
             {
-                File.AppendAllText(tmpFile, $"if(std::stoi({v1}) > std::stoi({v2}))");
+                File.AppendAllText(tmpFile, $"{keyword}(std::stoi({v1}) > std::stoi({v2}))");
 
             }
             else
@@ -312,7 +343,7 @@ namespace zentronC
                 throw new Exception("Invalid rule.");
             }
         }
-        public void writeAdd(string[] statement)
+        public void writeArithemic(string[] statement,string type)
         {
             var n1 = statement[1];
             var n2 = statement[2];
@@ -320,9 +351,17 @@ namespace zentronC
             {
                 n1 = n1.Substring(1);
             }
+            else
+            {
+                n1 = $"\"{n1}\"";
+            }
             if (n2.StartsWith("&"))
             {
                 n2 = n2.Substring(1);
+            }
+            else
+            {
+                n2 = $"\"{n2}\"";
             }
             var resVar = statement[4];
             if (isAutoDeclare)
@@ -332,29 +371,7 @@ namespace zentronC
                     File.AppendAllText(tmpFile, $"std::string {resVar};\n");
                 }
             }
-            File.AppendAllText(tmpFile, $"{resVar} = std::to_string({n1} + {n2});\n");
-        }
-        public void writeSubtract(string[] statement)
-        {
-            var n1 = statement[1];
-            var n2 = statement[2];
-            if (n1.StartsWith("&"))
-            {
-                n1 = n1.Substring(1);
-            }
-            if (n2.StartsWith("&"))
-            {
-                n2 = n2.Substring(1);
-            }
-            var resVar = statement[4];
-            if (isAutoDeclare)
-            {
-                if (!mainClass.createdVars.Contains(resVar))
-                {
-                    File.AppendAllText(tmpFile, $"std::string {resVar};\n");
-                }
-            }
-            File.AppendAllText(tmpFile, $"{resVar} = std::to_string({n1} - {n2});\n");
+            File.AppendAllText(tmpFile, $"{resVar} = std::to_string(std::stoi({n1}) {type} std::stoi({n2}));\n");
         }
     }
 }

@@ -2,7 +2,7 @@
   "profiles": {
     "zentronC": {
       "commandName": "Project",
-      "commandLineArgs": "code.zn out.exe"
+      "commandLineArgs": "cpptest.zn out.exe"
     }
   }
 }

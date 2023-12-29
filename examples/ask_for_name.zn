@@ -1,0 +1,35 @@
+sum;
+op;
+num1;
+num2;
+opStr;
+isNumDigit;
+say n "Enter the operation you wanna do (either + or -)"
+loop
+    input -> op
+    if &op is +
+        break
+    end
+    elif &op is -
+        break
+    end
+    say n "Please enter either + or -"
+    continue
+end
+if &op is +
+    opStr is add
+end
+elif &op is -
+    opStr is subtract
+end
+say_fmt "Please enter the first number you want to " &opStr \n
+input -> num1
+say_fmt "Please enter the second number you want to " &opStr \n
+input -> num2
+if &op is +
+    add &num1 &num2 -> sum
+end
+elif &op is -
+    subtract &num1 &num2 -> sum
+end
+say_fmt "Result:" &sum \n

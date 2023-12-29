@@ -1,5 +1,6 @@
 ﻿using System.Text;
-using zentronC;
+using zentronC.src;
+
 class mainClass
 {
     public static string output = "";
@@ -8,6 +9,7 @@ class mainClass
     public static List<string> createdVars = new List<string>();
     static void Main(string[] args)
     {
+        bool isCpp = false;
         if (args.Length < 2)
         {
             Console.WriteLine("Please provide a file to compile and an output executable");
@@ -16,21 +18,37 @@ class mainClass
         mainClass mainClassObj = new mainClass();  
         var lines = File.ReadAllLines(args[0]);
         output = args[1];
-        foreach(var line in lines)
-        {
-            mainClass.parsedLines.Add(mainClassObj.ParseLine(line));
-        }
-        mainClassObj.run(mainClass.parsedLines);
+        mainClassObj.run(lines);
     }
 
-    public void run(List<string[]> pLines)
+    public void run(string[] lines)
     {
-       
-        Compiler compiler = new Compiler();
+        bool iscpp = false;
         compiler.initCompiler();
-        foreach(var line in pLines)
+        foreach(var line in lines)
         {
-           doLine(line);
+            if(line.Trim().ToLower() == "cpp")
+            {
+                iscpp = true;
+                continue;
+            }
+            else if(line.Trim().ToLower() == "cppend")
+            {
+                iscpp = false;
+                continue;
+            }
+            if(iscpp)
+            {
+                File.AppendAllText("tmp.cpp",line+"\n");
+            }
+            else
+            {
+                mainClass.parsedLines.Add(ParseLine(line));
+            }
+        }
+        foreach(var line in parsedLines)
+        {
+            doLine(line);
         }
         compiler.closeCompiler();
         compiler.Compile(output);
@@ -40,12 +58,14 @@ class mainClass
     {
         if (statement[0].EndsWith(";"))
         {
+            createdVars.Add(statement[0]);
             return true;
         }
         else if (statement.Length > 2)
         {
             if (statement[1] == "is")
             {
+                createdVars.Add(statement[0]);
                 return true;
             }
         }
@@ -90,6 +110,10 @@ class mainClass
         {
             compiler.writePrint(parsedLn);
         }
+        else if(cmnd.ToLower() == "say_fmt")
+        {
+            compiler.writeFmt(parsedLn);
+        }
         else if(cmnd.ToLower() == "#rule")
         {
             compiler.writeRule(parsedLn);
@@ -116,7 +140,11 @@ class mainClass
         }
         else if (cmnd.ToLower() == "if")
         {
-            compiler.writeIf(parsedLn);
+            compiler.writeIf(parsedLn,false);
+        }
+        else if (cmnd.ToLower() == "elif")
+        {
+            compiler.writeIf(parsedLn, true);
         }
         else if (cmnd.ToLower() == "end")
         {
@@ -160,11 +188,19 @@ class mainClass
         }
         else if (isArithemic(parsedLn,"add"))
         {
-            compiler.writeAdd(parsedLn);
+            compiler.writeArithemic(parsedLn,"+");
         }
         else if (isArithemic(parsedLn, "subtract"))
         {
-            compiler.writeSubtract(parsedLn);
+            compiler.writeArithemic(parsedLn, "-");
+        }
+        else if (isArithemic(parsedLn, "multiply"))
+        {
+            compiler.writeArithemic(parsedLn, "*");
+        }
+        else if (isArithemic(parsedLn, "divide"))
+        {
+            compiler.writeArithemic(parsedLn, "/");
         }
         else if (cmnd.StartsWith("//"))
         {
