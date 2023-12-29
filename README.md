@@ -1,15 +1,15 @@
 # ZentronC 🚀
-*Documentation last updated December 24th*
+*Documentation last updated December 29th*
 
 **NOTE: ZentronC is a project I am doing for fun. It is very buggy at its current state and is updated almost daily**
 
 ZentronC is a compiled scripting language that's faster than both Lua and Python. It is relatively lightweight and is written in C#.
 
 ## Dependencies
-* GCC accessible from the command line
+* G++ accessible from the command line
 
 ## How it works
-ZentronC scripts are compiled before runtime. First, they are translated into C code and then into machine code with GCC. This compiler is dependent on GCC.
+ZentronC scripts are compiled before runtime. First, they are translated into C++ code and then into machine code with GCC. This compiler is dependent on GCC/G++.
 
 ## Sample script
 This script asks for the user's name and repeats until the user enters a valid name.
@@ -86,10 +86,12 @@ waitseconds [seconds_to_wait]
 ```
 
 ### Integer manipulation
-While arithmetic operations are not supported yet, you can use the following syntax to decrement and increment variables:
+At the moment, only basic addition, subtraction, incrementation and decrementation are supported.
 ```zentronC
 increment [variable_name] by [how_much]
 decrement [variable_name] by [how_much]
+add [value1] [value2] -> [variable_name]
+subtract [value1] [value2] -> [variable_name]
 ```
 
 ### Comments
