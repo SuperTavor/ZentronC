@@ -13,7 +13,7 @@ ZentronC scripts are compiled before runtime. First, they are translated into C 
 
 ## Sample script
 This script asks for the user's name and repeats until the user enters a valid name.
-```
+```zentronC
 name;
 say n "What is your name"
 loop 
@@ -34,22 +34,22 @@ say nnl &name
 ## Available commands and syntax
 ### Printing to the screen
 To print things to the console, you can use the following syntax:
-```
+```zentronC
 say ['n' to print a newline afterwards and 'nnl' to not] [the content, wrapped in " if it's a literal, and prefixed by & if it's a variable]
 ```
 
 So here is what a hello world with the `say` command might look like:
-```
+```zentronC
 say n "Hello, world!"
 ```
 
 If we were to put "Hello, world" in a variable, this is how it would look:
-```
+```zentronC
 x is "Hello, world"
 say n &x
 ```
 To print a newline, you would use this syntax:
-```
+```zentronC
 sayemptyline
 ```
 
@@ -64,43 +64,43 @@ To create an empty variable, you can specify a variable name and end it with a s
 
 ### Getting input
 To get input from the user, you can use the following syntax:
-```
+```zentronC
 input -> [Variable_name]
 ```
 This code snippet will put the user input into the specified variable.
 
 ### Labels and jumps
 You can declare a label with the following syntax:
-```
+```zentronC
 mark [label_name]
 ```
 You can jump to a mark with the following syntax:
-```
+```zentronC
 jumptomark [label_name]
 ```
 
 ### Sleeping
 To wait a few seconds, you can use the following syntax:
-```
+```zentronC
 waitseconds [seconds_to_wait]
 ```
 
 ### Integer manipulation
 While arithmetic operations are not supported yet, you can use the following syntax to decrement and increment variables:
-```
+```zentronC
 increment [variable_name] by [how_much]
 decrement [variable_name] by [how_much]
 ```
 
 ### Comments
 You can use `//` for single-line comments.
-```
+```zentronC
 // This is a comment!
 ```
 
 ### Conditional statements
 Available operators for checks:
-```
+```zentronC
 // more will be added in the near future
 is
 isnt
@@ -108,13 +108,13 @@ isnt
 >
 ```
 For `if` statements, you can use the following syntax:
-```
+```zentronC
 if [value_1] [operator] [value_2]
   // do something
 end
 ```
 For an `else` statement, you can use the following syntax:
-```
+```zentronC
 else
   // do something
 end
@@ -123,7 +123,7 @@ end
 
 ### Exiting the program
 To exit the program, you can use the following syntax:
-```
+```zentronC
 exit
 ```
 
@@ -134,14 +134,14 @@ There are two types of loops available at the moment: Infinite loops and `Until`
 * Infinite loops run infinitely unless stopped.
 
 For infinite loops, you can use the following syntax:
-```
+```zentronC
 loop
   // do something
 end
 ```
 For until loops, you can use the following syntax:
 
-```
+```zentronC
 until [value_1] [operator] [value_2]
   // do something
 end
@@ -149,17 +149,17 @@ end
 **Remember: variable names need to be prefixed with an ampersand!**
 
 Here are some loop-related keywords:
-```
+```zentronC
 // break - breaks out of the current loop
 // continue - continues an iteration of the loop
 ```
 
 ### Compiler rules
 At the moment, there is only one compiler rule.
-```
+```zentronC
 // auto-declare - automatically declare variables mentioned in statements that set the variable value
 ```
 To add a compiler rule to your script, you can use the following syntax:
-```
+```zentronC
 #rule [compiler_rule]
 ```
