@@ -47,7 +47,6 @@ class mainClass
         {
             if (statement[1] == "is")
             {
-                createdVars.Add(statement[0]);
                 return true;
             }
         }
