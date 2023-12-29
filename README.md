@@ -128,6 +128,12 @@ if [value_1] [operator] [value_2]
   // do something
 end
 ```
+For `elif` statements, you can use the following syntax:
+```zentronC
+elif [value_1] [operator] [value_2]
+  // do something
+end
+```
 For an `else` statement, you can use the following syntax:
 ```zentronC
 else
