@@ -181,11 +181,3 @@ To add a compiler rule to your script, you can use the following syntax:
 ```zentronC
 #rule [compiler_rule]
 ```
-## Emit C++
-You can start a C++ section with the cpp keyword and end it with the cppend keyword. Example:
-```
-cpp
-std::string hello = "Hello, world"!
-cppend
-say n &hello
-```
