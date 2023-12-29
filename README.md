@@ -42,13 +42,22 @@ So here is what a hello world with the `say` command might look like:
 ```zentronC
 say n "Hello, world!"
 ```
-
-If we were to put "Hello, world" in a variable, this is how it would look:
+to print variables, you need to write `&` and then the variable name. Example:
 ```zentronC
-x is "Hello, world"
+x = "Hello"
 say n &x
 ```
-To print a newline, you would use this syntax:
+for string formatting, you can print with the `say_fmt` command. Example:
+```zentronC
+name = "John"
+age = "10"
+say_fmt "a kid named " &name " is " &age " years old."
+```
+Keep in mind that unlike `say`, `say_fmt` doesn't print a newline, you have to do it manually:
+```zentronC
+say_fmt "hello, world\n"
+```
+To print a newline without anything else, you would use this syntax:
 ```zentronC
 sayemptyline
 ```
@@ -61,6 +70,11 @@ To declare a variable, you can follow this syntax:
 To create an empty variable, you can specify a variable name and end it with a semicolon.
 
 `[Variable_name];`
+If we were to put "Hello, world" in a variable, this is how it would look:
+```zentronC
+x is "Hello, world"
+say n &x
+```
 
 ### Getting input
 To get input from the user, you can use the following syntax:
@@ -86,12 +100,14 @@ waitseconds [seconds_to_wait]
 ```
 
 ### Integer manipulation
-At the moment, only basic addition, subtraction, incrementation and decrementation are supported.
+At the moment, only basic addition, subtraction, division, multiplication, incrementation and decrementation are supported.
 ```zentronC
 increment [variable_name] by [how_much]
 decrement [variable_name] by [how_much]
 add [value1] [value2] -> [variable_name]
 subtract [value1] [value2] -> [variable_name]
+multiply [value1] [value2] -> [variable_name]
+divide [value1] [value2] -> [variable_name]
 ```
 
 ### Comments
@@ -164,4 +180,12 @@ At the moment, there is only one compiler rule.
 To add a compiler rule to your script, you can use the following syntax:
 ```zentronC
 #rule [compiler_rule]
+```
+## Emit C++
+You can start a C++ section with the cpp keyword and end it with the cppend keyword. Example:
+```
+cpp
+std::string hello = "Hello, world"!
+cppend
+say n &hello
 ```
