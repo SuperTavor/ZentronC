@@ -1,5 +1,5 @@
 # ZentronC 🚀
-*Documentation last updated December 29th*
+*Documentation last updated December 30th*
 
 **NOTE: ZentronC is a project I am doing for fun. It is very buggy at its current state and is updated almost daily**
 
