@@ -184,10 +184,10 @@ class mainClass
         {
             compiler.writeArithemic(parsedLn, "/");
         }
-        else if(cmnd.ToLower() == "cpp")
-        {
+        //else if (cmnd.ToLower() == "cpp")
+        //{
 
-        }
+        //}
         else if (cmnd.StartsWith("//"))
         {
             return;
