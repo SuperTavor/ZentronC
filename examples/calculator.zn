@@ -34,7 +34,7 @@ end
 elif &op is /
     opStr is divide
 end
-say_fmt "Please enter the first number you want to " &opStr \n
+say "Please enter the first number you want to " &opStr \n
 input -> num1
 say_fmt "Please enter the second number you want to " &opStr \n
 input -> num2
@@ -50,4 +50,4 @@ end
 elif &op is /
     divide &num1 &num2 -> sum
 end
-say_fmt "Result:" &sum \n
+say "Result:" &sum \n
